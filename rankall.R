@@ -4,9 +4,6 @@
 
 rankall <- function(outcome, num = "best") {
 
-  ## To do
-  ## 1. insert comment or replace 
-  
   
   
   ## Read outcome data
@@ -35,6 +32,7 @@ rankall <- function(outcome, num = "best") {
 ## For each state, find the hospital of the given rank
   hospital.names<-character(0)
   states<- unique(dat_outcome$State)
+  states <- states[order(states)]
   for (state in states) {
     state_outcome <-  # copy only the columns and the rows  that are needed  
        dat_outcome[dat_outcome$State==state & dat_outcome[[field_name]]!="Not Available",
