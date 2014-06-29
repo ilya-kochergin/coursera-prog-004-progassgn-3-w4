@@ -33,9 +33,9 @@ rankall <- function(outcome, num = "best") {
   field_name <- names_translate_vector[outcome]
 
 ## For each state, find the hospital of the given rank
-  allstates_rank <- data.frame()
-  for (state in unique(dat_outcome$State)) {
-    print(state)
+  hospital.names<-character(0)
+  states<- unique(dat_outcome$State)
+  for (state in states) {
     state_outcome <-  # copy only the columns and the rows  that are needed  
        dat_outcome[dat_outcome$State==state & dat_outcome[[field_name]]!="Not Available",
                   c("Hospital.Name",field_name)] 
@@ -45,16 +45,16 @@ rankall <- function(outcome, num = "best") {
     if(is.numeric(num)) {
       rownum<- num
     } else if (num=="best") {
-      rownum <-1 
+      rownum <- 1 
     } else if (num=="worst") {
       rownum <- nrow(state_outcome)
     } else stop("invalid num")
   
     rank_hospitals<- state_outcome[order( state_outcome$indicator, state_outcome$Hospital.Name),]
-    new_row <- data.frame(hospital=rank_hospitals[ rownum, "Hospital.Name" ],
-                          state=state)
-    rownames(new_row) <- state 
-    allstates_rank<-rbind(allstates_rank,new_row)
-    allstates_rank
+    hospital.names <- append( hospital.names, rank_hospitals[ rownum, "Hospital.Name" ])
   }
+## Return a data frame with the hospital names and the
+## (abbreviated) state name
+
+  data.frame(hospital=hospital.names,state=states,row.names=states)
 }
